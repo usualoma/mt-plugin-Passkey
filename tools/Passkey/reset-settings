@@ -1,0 +1,42 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use Getopt::Long;
+use FindBin;
+use lib $ENV{MT_HOME}
+    ? ("$ENV{MT_HOME}/lib", "$ENV{MT_HOME}/lib")
+    : ("$FindBin::Bin/../../lib", "$FindBin::Bin/../../extlib");
+use MT::Bootstrap;
+use MT;
+
+my $mt = MT->new() or die MT->errstr;
+
+GetOptions(
+    'username=s' => \my $username,
+    'email=s'    => \my $email,
+    'all'        => \my $all,
+);
+
+if (grep({ $_ } ($username, $email, $all)) != 1) {
+    die <<USAGE;
+Usage: $0 --username=[username] --email=[email] --all
+Specify only one of --username, --email, --all.
+USAGE
+}
+
+my $iter = $mt->model('author')->load_iter({
+    (defined($username) ? (name  => $username) : ()),
+    (defined($email)    ? (email => $email)    : ()),
+});
+my $count = 0;
+
+while (my $user = $iter->()) {
+    if ($mt->model('passkey')->remove({ author_id => $user->id })) {
+        $count++;
+    } else {
+        warn "Failed to reset settings for user " . $user->name . "(" . $user->email . ") : " . $mt->errstr;
+    }
+}
+
+print "Reset settings for $count users.\n";

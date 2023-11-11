@@ -1,0 +1,23 @@
+<mt:setvarblock name="js_include" append="1">
+<script
+  src="<$mt:var name="static_uri"$>plugins/Passkey/dist/list_common.min.js?v=<mt:Var name="plugin_passkey_version" />"
+  data-passkey-script
+  data-user-id="<mt:Var name="passkey_user_id" encode_html="1"/>"
+  data-user-name="<mt:Var name="passkey_user_name" encode_html="1"/>"
+  data-user-display-name="<mt:Var name="passkey_user_display_name" encode_html="1"/>"
+  data-exclude-ids="<mt:Var name="passkey_exclude_ids" to_json="1" encode_html="1"/>"
+  data-label-prompt="<__trans_section component="Passkey"><__trans phrase="Enter a label for this passkey" encode_html="1"/></__trans_section>"
+  type="module"
+></script>
+</mt:setvarblock>
+
+<mt:If name="request.passkey_added">
+<mt:setvarblock name="system_msg" append="1">
+  <mtapp:statusmsg
+    id="passkey-added"
+    class="info"
+    can_close="0">
+    <__trans_section component="Passkey"><__trans phrase="Your passkey has been added."></__trans_section>
+  </mtapp:statusmsg>
+</mt:setvarblock>
+</mt:If>

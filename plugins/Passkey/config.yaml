@@ -1,0 +1,125 @@
+id: Passkey
+name: Passkey
+version: 0.0.1
+
+description: <__trans phrase="This plugin provides the Passkey authentication for the Movable Type.">
+author_name: Taku Amano
+author_link: http://blog.taaas.jp/
+plugin_link: http://blog.taaas.jp/mt/mt-plugin-Passkey/
+
+l10n_lexicon:
+  ja:
+    Passkey: "パスキー"
+    Passkeys: "パスキー"
+    Author Name: "ユーザー名"
+    Manage Passkey: "一覧"
+    Enter a label for this passkey: "パスキーの名前を入力してください"
+    'Are you sure you want to delete the selected Passkeys?': '選択したパスキーを削除してもよろしいですか？'
+    'Your passkey has been added.': 'パスキーが追加されました。'
+    Invalid credential.: '認証情報が正しくありません。'
+    Invalid challenge.: 'challengeの値が正しくありません。'
+    'Error validating authentication: [_1]': '認証情報の検証に失敗しました: [_1]'
+    'Invalid author.': 'ユーザーが見つかりません。'
+    "User '[_1]' (ID:[_2]) logged in successfully via passkey": "ユーザー'[_1]'(ID[_2])がPasskeyを使ってサインインしました。"
+
+schema_version: 0.07
+object_types:
+  passkey: MT::Plugin::Passkey::Passkey
+  passkey_challenge: MT::Plugin::Passkey::PasskeyChallenge
+
+applications:
+  cms:
+    enable_object_methods:
+      passkey:
+        delete: 1
+    menus:
+      passkey:
+        label: Passkey
+        order: 1350
+      passkey:manage:
+        label: Manage Passkey
+        order: 100
+        mode: list
+        args:
+          _type: passkey
+        view:
+          - system
+      passkey:create:
+        order: 200
+        mode: view
+        args:
+          _type: passkey
+        view:
+          - system
+        display: 0
+      passkey:save:
+        order: 10000
+        mode: save
+        args:
+          _type: passkey
+        view:
+          - system
+        display: 0
+    methods:
+      save_passkey:
+        handler: $Passkey::MT::Plugin::Passkey::save_passkey
+        app_mode: JSON
+      login_passkey:
+        handler: $Passkey::MT::Plugin::Passkey::login_passkey
+        app_mode: JSON
+        requires_login: 0
+      challenge_passkey:
+        handler: $Passkey::MT::Plugin::Passkey::challenge_passkey
+        app_mode: JSON
+        requires_login: 0
+    callbacks:
+      template_param.list_common: $Passkey::MT::Plugin::Passkey::template_param_list_common
+      template_param.login: $Passkey::MT::Plugin::Passkey::template_param_login
+      template_source.login_mt: $Passkey::MT::Plugin::Passkey::template_source_login_mt
+      cms_save_permission_filter.passkey: $Passkey::MT::Plugin::Passkey::save_permission_filter
+      cms_delete_permission_filter.passkey: $Passkey::MT::Plugin::Passkey::delete_permission_filter
+      cms_pre_load_filtered_list.passkey: $Passkey::MT::Plugin::Passkey::pre_load_filtered_list
+
+listing_screens:
+  passkey:
+    object_label: Passkey
+    primary: label
+    data_api_permission: ~
+    data_api_scope_mode: strict
+
+list_properties:
+  passkey:
+    label:
+      label: Label
+      auto: 1
+      order: 100
+      display: force
+    author_name:
+      base: __virtual.author_name
+      label: Author Name
+      order: 200
+
+list_actions:
+  passkey:
+    delete:
+      label: Delete
+      order: 100
+      continue_prompt_handler: >
+        sub {
+            my $app = MT->component('Passkey');
+            $app->translate('Are you sure you want to delete the selected Passkeys?')
+        }
+      mode: delete
+      button: 1
+      js_message: delete
+
+content_actions:
+  passkey:
+    create_new:
+      order: 100
+      mode: view
+      args:
+        _type: passkey
+      class: icon-create
+      icon: ic_add
+      label: Create New

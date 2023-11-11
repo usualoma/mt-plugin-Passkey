@@ -1,0 +1,83 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@4.5.0
+
+commands:
+  update-git:
+    steps:
+      - run: |
+          if [ "`cat /etc/redhat-release | sed -e 's/.*\s\([0-9]\)\..*/\1/'`" = 6 ]; then
+            yum install http://opensource.wandisco.com/centos/6/git/x86_64/wandisco-git-release-6-1.noarch.rpm -y
+            yum install git -y
+          fi
+
+jobs:
+  test-perl:
+    parameters:
+      docker-image:
+        type: string
+        default: movabletype/test:buster
+    docker:
+      - image: << parameters.docker-image >>
+    steps:
+      - update-git
+      - checkout
+      - run:
+          name: Test
+          command: |
+            git clone -b develop --depth 1  https://github.com/movabletype/movabletype.git mt
+            cp -r mt/* .
+            cp mt/.proverc .
+            prove -j4 -PMySQLPool=MT::Test::Env -It/lib plugins/Passkey/t
+
+  build:
+    docker:
+      - image: cimg/node:18.9.1
+    steps:
+      - checkout
+      - run:
+          name: Install build dependency
+          command: |
+            sudo apt update
+            sudo apt --no-install-recommends -y install libjson-perl libyaml-perl
+      - run:
+          name: Build
+          command: |
+            perl Makefile.PL --version $(git describe --tags | sed -e 's/^v//')
+            make manifest
+            make zipdist
+            make dist
+            mkdir -p packages
+            mv Passkey-* packages
+      - store_artifacts:
+          path: packages
+
+workflows:
+  version: 2
+  test-and-build:
+    jobs:
+      - test-perl:
+          name: test-perl with jessie
+          docker-image: movabletype/test:jessie
+      - test-perl:
+          name: test-perl with buster
+          docker-image: movabletype/test:buster
+      - test-perl:
+          name: test-perl with fedora
+          docker-image: movabletype/test:fedora
+      - test-perl:
+          name: test-perl with bullseye
+          docker-image: movabletype/test:bullseye
+      - test-perl:
+          name: test-perl with cloud7
+          docker-image: movabletype/test:cloud7
+      - build
+  tagged-build:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
