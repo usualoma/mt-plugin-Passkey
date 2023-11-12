@@ -63,7 +63,14 @@ contentActions.addEventListener("click", async (ev) => {
 
   const credential = await navigator.credentials.create({
     publicKey: publicKeyCredentialCreationOptions as any,
+  }).catch((err) => {
+    console.error(err);
+    alert(err.message);
   });
+
+  if (!credential) {
+    return;
+  }
 
   const label = window.prompt(labelPrompt);
   if (!label) {
