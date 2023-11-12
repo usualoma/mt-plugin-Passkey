@@ -20,6 +20,7 @@
 Gruntfile
 package.json
 docker-compose.yml
+compose.yml
 Dockerfile
 package-lock.json
 tsconfig.json
