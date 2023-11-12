@@ -3,6 +3,10 @@
 This is a plugin for the Movable Type.
 This plugin provides the Passkey authentication for the Movable Type.
 
+![Screenshot](https://raw.githubusercontent.com/usualoma/mt-plugin-Passkey/main/artwork/screenshot.png)
+
+[Demo](https://youtu.be/5Wta8HeNF2o)
+
 ## Installation
 
 1. Download an archive file from [releases](https://github.com/movabletype/mt-plugin-Passkey/releases).
