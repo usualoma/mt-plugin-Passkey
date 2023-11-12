@@ -11,7 +11,7 @@ WriteMakefile(
     NAME     => $config->{name},
     VERSION  => $version,
     SKIP     => [qw(distdir)],
-    DISTNAME => $config->{name},
+    DISTNAME => 'mt-plugin-' . $config->{name},
 );
 
 sub MY::top_targets {
