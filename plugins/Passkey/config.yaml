@@ -18,6 +18,8 @@ l10n_lexicon:
     Enter a label for this passkey: "パスキーの名前を入力してください"
     'Are you sure you want to delete the selected Passkeys?': '選択したパスキーを削除してもよろしいですか？'
     'Your passkey has been added.': 'パスキーが追加されました。'
+    'Error validating registration: [_1]': '登録情報の検証に失敗しました: [_1]'
+    'Failed to save passkey: [_1]': 'パスキーの保存に失敗しました: [_1]'
     Invalid credential.: '認証情報が正しくありません。'
     Invalid challenge.: 'challengeの値が正しくありません。'
     'Error validating authentication: [_1]': '認証情報の検証に失敗しました: [_1]'

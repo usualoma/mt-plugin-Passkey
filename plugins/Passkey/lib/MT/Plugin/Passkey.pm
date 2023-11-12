@@ -110,7 +110,7 @@ sub save_passkey {
     my $webauthn_rp = _authen_webauthn($app);
 
     my $challenge = $app->model('passkey_challenge')->validate_id(scalar $app->param('challenge'))
-        or return $app->json_error($app->translate("Invalid challenge."));
+        or return $app->json_error(translate("Invalid challenge."));
     (my $challenge_b64 = MIME::Base64::encode($challenge, '')) =~ s/=+$//;
     my $registration_result = eval {
         $webauthn_rp->validate_registration(
@@ -123,8 +123,9 @@ sub save_passkey {
             # token_binding_id_b64   => '',
         );
     };
-    if ($@) {
-        return $app->json_error($app->translate("Error validating registration: $@"));
+    if (my $err = $@) {
+        $err =~ s/ at .+//s;
+        return $app->json_error(translate('Error validating registration: [_1]', $err));
     }
 
     my $passkey = $app->model('passkey')->new(
@@ -134,7 +135,7 @@ sub save_passkey {
         author_id     => $user->id,
         public_key    => $registration_result->{credential_pubkey},
     );
-    $passkey->save or return $app->json_error($app->translate("Failed to save passkey." . $passkey->errstr));
+    $passkey->save or return $app->json_error(translate("Failed to save passkey: [_1]", $passkey->errstr));
 
     return $app->json_result;
 }
@@ -185,7 +186,7 @@ sub login_passkey {
     }
 
     my $author = $app->model('author')->load($passkey->author_id)
-    ; return _invalid_credentials($app, "Invalid author.");
+        or return _invalid_credentials($app, "Invalid author.");
 
     MT::Auth->new_login($app, $author);
     $app->request('fresh_login', 1);
