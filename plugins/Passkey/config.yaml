@@ -11,6 +11,8 @@ l10n_lexicon:
   ja:
     Passkey: "パスキー"
     Passkeys: "パスキー"
+    Passkey Challenge: "パスキーのchallenge"
+    Passkey Challenges: "パスキーのchallenge"
     Author Name: "ユーザー名"
     Manage Passkey: "一覧"
     Enter a label for this passkey: "パスキーの名前を入力してください"
