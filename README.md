@@ -26,8 +26,15 @@ Should look like this when installed:
 
 ## Requirements
 
+### Movable Type
+
 * Movable Type 7
 * Movable Type 8
+
+### Perl modules
+
+* Crypt::PK::ECC
+* Crypt::PK::RSA
 
 ## LICENSE
 
