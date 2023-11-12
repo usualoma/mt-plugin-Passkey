@@ -1,6 +1,6 @@
 id: Passkey
 name: Passkey
-version: 0.0.2
+version: 0.0.3
 
 description: <__trans phrase="This plugin provides the Passkey authentication for the Movable Type.">
 author_name: Taku Amano
