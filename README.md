@@ -9,7 +9,7 @@ This plugin provides the Passkey authentication for the Movable Type.
 
 ## Installation
 
-1. Download an archive file from [releases](https://github.com/movabletype/mt-plugin-Passkey/releases).
+1. Download an archive file from [releases](https://github.com/usualoma/mt-plugin-Passkey/releases).
 1. Unpack an archive file.
 1. Upload unpacked files to the MT `plugins` directory.
 
